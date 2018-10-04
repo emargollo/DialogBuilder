@@ -10,7 +10,8 @@ type Props = {
   langs: array,
   index: number,
   dialogName: string,
-  editText: () => {}
+  editText: () => {},
+  deleteText: () => {}
 };
 
 class PhraseComponent extends Component<Props> {
@@ -19,12 +20,25 @@ class PhraseComponent extends Component<Props> {
     edit: false
   }
 
+  componentDidMount = () => {
+    const {selectedLang, langs} = this.props;
+    const currentLang = langs.filter(lang => lang.id === selectedLang)
+      [0] || {id: selectedLang, message: ''};
+    if(currentLang.message === '') {
+      this.setState({edit: true});
+    }
+  }
+
   handleEditToggle = () => {
     this.setState(prevState => ({ edit: !prevState.edit }));
   }
 
+  handleDeletePhrase = () => {
+    const { index, dialogName, deleteText} = this.props;
+    deleteText(index, dialogName);
+  }
+
   handleLangEdit = (event) => {
-    console.log(this.props)
     const { selectedLang, index, dialogName, editText} = this.props;
     const message = event.target.value;
     const lang = {
@@ -49,6 +63,12 @@ class PhraseComponent extends Component<Props> {
             type='button'
           >
             Edit
+          </button>
+          <button
+            onClick={this.handleDeletePhrase}
+            type='button'
+          >
+            Delete
           </button>
         </div>
         <LangComponent

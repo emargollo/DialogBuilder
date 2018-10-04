@@ -10,7 +10,7 @@ const editTextComponent = (props: Props) => {
   const {message, onEdit} = props;
 
   return (
-    <Textarea style={{width:'100%'}} onChange={onEdit} value={message}/>
+    <Textarea autoFocus style={{width:'100%'}} onChange={onEdit} value={message}/>
   )
 }
 
