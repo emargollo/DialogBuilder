@@ -1,7 +1,8 @@
 import React from 'react';
 
 type Props = {
-  message: string
+  message: string,
+  toggleEdit: () => {}
 };
 
 const checkForColorTags = (message: string) => {
@@ -30,14 +31,14 @@ const messageToSpam = (msg, index) => {
 }
 
 const displayTextComponent = (props: Props) => {
-  const {message} = props;
+  const {message, toggleEdit} = props;
 
   const messageParts = checkForColorTags(message);
 
   const spams = messageParts.map((msg, index) => messageToSpam(msg, index));
 
   return (
-    <div>{spams}</div>
+    <div role='presentation' onKeyPress={() => {}} onClick={toggleEdit}>{spams}</div>
   )
 }
 

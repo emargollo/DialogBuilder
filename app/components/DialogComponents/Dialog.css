@@ -30,7 +30,7 @@
 }
 
 .Phrase {
-  width: fit-content;
+  width: auto;
   background-color: slateblue;
   max-width: 400px;
   padding: 20px;

@@ -5,19 +5,24 @@ import EditTextComponent from './EditTextComponent';
 type Props = {
   message: string,
   edit: boolean,
-  onEdit: () => {}
+  onEdit: () => {},
+  toggleEdit: () => {},
+  onEnter: () => {}
 };
 
 const langComponent = (props: Props) => {
   const {
     message,
     edit,
-    onEdit
+    onEdit,
+    onEnter,
+    toggleEdit
   } = props;
   if(edit) {
     return (
       <EditTextComponent
         onEdit={onEdit}
+        onEnter={onEnter}
         message={message}
       />
     );
@@ -25,6 +30,7 @@ const langComponent = (props: Props) => {
   return (
     <DisplayTextComponent
       message={message}
+      toggleEdit={toggleEdit}
     />
   );
 }

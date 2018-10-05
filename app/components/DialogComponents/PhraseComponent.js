@@ -29,6 +29,15 @@ class PhraseComponent extends Component<Props> {
     }
   }
 
+  componentWillReceiveProps = (nextProps) => {
+    const {selectedLang: nextLang} = nextProps;
+    const {selectedLang: currLang} = this.props;
+
+    if(nextLang !== currLang) {
+      this.setState({edit: false});
+    }
+  }
+
   handleEditToggle = () => {
     this.setState(prevState => ({ edit: !prevState.edit }));
   }
@@ -46,6 +55,13 @@ class PhraseComponent extends Component<Props> {
       message
     };
     editText(lang, index, dialogName);
+  }
+
+  onEnterPress = (e) => {
+    if(e.keyCode === 13 && e.shiftKey === false) {
+      e.preventDefault();
+      this.handleEditToggle();
+    }
   }
 
   render() {
@@ -75,6 +91,8 @@ class PhraseComponent extends Component<Props> {
           message={currentLang.message}
           edit={edit}
           onEdit={this.handleLangEdit}
+          onEnter={this.onEnterPress}
+          toggleEdit={this.handleEditToggle}
         />
       </div>
     );

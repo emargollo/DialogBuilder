@@ -5,12 +5,17 @@ import {
   FILE_OPENED,
   TEXT_EDITED,
   TEXT_ADDED,
+  DIALOG_ADDED,
+  DIALOG_DELETED,
+  DIALOG_NAME_EDITED,
+  DATA_CLEARED,
   TEXT_DELETED
 } from '../actions/builder'
 
 const defaultState = {
   data: {
     dialogs: [{
+      id: uuid(),
       name: 'begin_q11',
       phrases: [{
         id: uuid(),
@@ -47,6 +52,7 @@ const defaultState = {
         }]
       }],
     }, {
+      id: uuid(),
       name: 'middle_q11',
       phrases: [{
         id: uuid(),
@@ -64,9 +70,10 @@ const defaultState = {
 const deleteText = (state, action) => {
   const {data:{dialogs}} = state;
   const alteredDialogs = dialogs.map((dialog) => {
-    if(dialog.name === action.dName) {
+    if(dialog.id === action.dId) {
       const phrases = dialog.phrases.filter((phrase, i) => i !== action.pIndex);
       return {
+        id: dialog.id,
         name: dialog.name,
         phrases
       }
@@ -85,7 +92,7 @@ const addText = (state, action) => {
   const {data:{dialogs}, langs} = state;
 
   const alteredDialogs = dialogs.map((dialog) => {
-    if(dialog.name === action.dName) {
+    if(dialog.id === action.dId) {
       const {phrases} = dialog;
 
       const l = langs.map(lang => ({id: lang, message: ''}));
@@ -93,6 +100,7 @@ const addText = (state, action) => {
 
       phrases.push(newPhrase);
       return {
+        id: dialog.id,
         name: dialog.name,
         phrases
       };
@@ -112,7 +120,7 @@ const updateText = (state, action) => {
   const {data:{dialogs}} = state;
 
   const alteredDialogs = dialogs.map((dialog) => {
-    if(dialog.name === action.dName) {
+    if(dialog.id === action.dId) {
       const phrases = dialog.phrases.map((phrase, index) => {
         if(index === action.pIndex) {
           const {langs, id} = phrase;
@@ -136,6 +144,7 @@ const updateText = (state, action) => {
         return phrase;
       });
       return {
+        id: dialog.id,
         name: dialog.name,
         phrases
       }
@@ -151,8 +160,36 @@ const updateText = (state, action) => {
   }
 }
 
-export default function builder(state = defaultState, action: Action) {
+const builder = (state = defaultState, action: Action) => {
   switch (action.type) {
+    case DATA_CLEARED:
+      return {
+        ...state,
+        data: {
+          dialogs: []
+        }
+      }
+    case DIALOG_NAME_EDITED:
+      return {
+        ...state,
+        data: {
+          dialogs: [...state.data.dialogs.map(dialog => (dialog.id === action.id) ? {...dialog, name: action.name} : dialog)]
+        }
+      }
+    case DIALOG_DELETED:
+      return {
+        ...state,
+        data: {
+          dialogs: [...state.data.dialogs.filter(dialog => dialog.id !== action.id)]
+        }
+      }
+    case DIALOG_ADDED:
+      return {
+        ...state,
+        data: {
+          dialogs: [...state.data.dialogs, action.payload]
+        }
+      }
     case TEXT_DELETED:
       return deleteText(state, action);
     case TEXT_ADDED:
@@ -172,3 +209,5 @@ export default function builder(state = defaultState, action: Action) {
       return state;
   }
 }
+
+export default builder;

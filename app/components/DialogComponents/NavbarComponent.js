@@ -12,11 +12,17 @@ type Props = {
   langList: Array,
   onLanguageSelect: () => {},
   onFileSelected: () => {},
+  clearData: () => {},
   builder: {}
 };
 
 class NavbarComponent extends Component<Props> {
   props: Props;
+
+  handleNewFile = () => {
+    const { clearData } = this.props;
+    clearData();
+  }
 
   handleOpenFile = () => {
     remote.dialog.showOpenDialog({ properties: [ 'openFile']}, (path) => {
@@ -86,6 +92,12 @@ class NavbarComponent extends Component<Props> {
         <select value={selectedLang} onChange={onLanguageSelect}>
           {langList.map(lang => <option key={lang} value={lang}>{lang}</option>)}
         </select>
+        <button
+          type='button'
+          onClick={this.handleNewFile}
+        >
+          New File
+        </button>
         <button
           type='button'
           onClick={this.handleOpenFile}

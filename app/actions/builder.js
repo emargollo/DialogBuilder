@@ -10,30 +10,74 @@ const parseString = promisify(parser.parseString);
 export const LANGUAGE_SELECTED = 'LANGUAGE_SELECTED';
 export const TEXT_EDITED = 'TEXT_EDITED';
 export const TEXT_ADDED = 'TEXT_ADDED';
+export const DIALOG_ADDED = 'DIALOG_ADDED';
 export const TEXT_DELETED = 'TEXT_DELETED';
 export const FILE_OPENED = 'FILE_OPENED';
+export const DIALOG_DELETED = 'DIALOG_DELETED';
+export const DIALOG_NAME_EDITED = 'DIALOG_NAME_EDITED';
+export const DATA_CLEARED = 'DATA_CLEARED';
 
-export function deleteText(pIndex, dName) {
+export function deleteDialog(dId) {
+  return {
+    type: DIALOG_DELETED,
+    id: dId
+  }
+}
+
+export function clearData() {
+  return {
+    type: DATA_CLEARED
+  }
+}
+
+export function updateDialogName(name, id) {
+  return {
+    type: DIALOG_NAME_EDITED,
+    name,
+    id
+  }
+}
+
+export function addDialog(selectedLang) {
+  return {
+    type: DIALOG_ADDED,
+    payload: {
+      id: uuid(),
+      name:'New Dialog',
+      phrases: [
+        // {
+        //   id: uuid(),
+        //   langs:[{
+        //     id: selectedLang,
+        //     message: ''
+        //   }]
+        // }
+      ]
+    }
+  };
+}
+
+export function deleteText(pIndex, dId) {
   return {
     type: TEXT_DELETED,
-    dName,
+    dId,
     pIndex
   }
 }
 
-export function addPhrase(dName) {
+export function addPhrase(dId) {
   return {
     type: TEXT_ADDED,
-    dName
+    dId
   }
 }
 
-export function editText(lang, pIndex, dName) {
+export function editText(lang, pIndex, dId) {
   return {
     type: TEXT_EDITED,
     lang,
     pIndex,
-    dName
+    dId
   }
 }
 
@@ -71,6 +115,7 @@ const handleFile = async (filename, dispatch) => {
       }
     });
     return {
+      id: uuid(),
       name,
       phrases
     }
