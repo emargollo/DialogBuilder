@@ -1,8 +1,10 @@
 import { bindActionCreators } from 'redux';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import 'array.prototype.move';
 import * as BuilderActions from '../../actions/builder';
 import PhraseComponent from './PhraseComponent';
+import PhraseDropComponent from './PhraseDropComponent';
 import styles from './Dialog.css';
 
 type Props = {
@@ -13,18 +15,21 @@ type Props = {
   id: string,
   updateDialogName: () => {},
   deleteDialog: () => {},
-  addPhrase: () => {}
+  addPhrase: () => {},
+  reorderPhrases: () => {}
 };
 
 class DialogComponent extends Component<Props> {
   state = {
     edit: false,
-    title: ''
+    title: '',
+    phrases: [],
+    dragIndex: null
   }
 
   componentDidMount = () => {
-    const {name} = this.props;
-    this.setState({title: name});
+    const {name, phrases} = this.props;
+    this.setState({title: name, phrases});
   }
 
   handleAddPhrase = () => {
@@ -58,19 +63,55 @@ class DialogComponent extends Component<Props> {
     this.setState({title: event.target.value});
   }
 
-  render() {
-    const {langs, phrases, id, name, selectedLang} = this.props;
-    const {edit, title} = this.state;
-    const renderPhrases = phrases.map((phrase, index) => <PhraseComponent
-      key={phrase.id}
-      index={index}
-      dialogName={id}
-      langs={phrase.langs}
-      selectedLang={selectedLang}
-      langOpts={langs}
-      />);
+  handleDragOverPhrase = (event, index) => {
+    event.preventDefault();
+    const {dragIndex, phrases} = this.state;
+    if(dragIndex !== index) {
+      console.log(`Dragging ${dragIndex} over ${index}, horray`);
+      phrases.move(dragIndex, index);
+      this.setState({
+        phrases,
+        dragIndex: index
+      });
+    }
+  }
 
-    const titleArea = edit ? 
+  handleDragStart = (event, index) => {
+    event.target.style.opacity = '0.2'; // eslint-disable-line no-param-reassign
+    this.setState({dragIndex: index});
+  }
+
+  handleDragEnd = (event) => {
+    // TODO: send action to update reducer
+    const {phrases} = this.state;
+    const {id, reorderPhrases} = this.props;
+    reorderPhrases(id, phrases);
+    event.target.style.opacity = '1'; // eslint-disable-line no-param-reassign
+  }
+
+  render() {
+    const {langs, id, name, selectedLang} = this.props;
+    const {edit, title, phrases, dragIndex} = this.state;
+    const renderPhrases = phrases.map((phrase, index) => (
+      <PhraseDropComponent
+        key={phrase.id}
+        index={index}
+        dragOver={this.handleDragOverPhrase}
+      >
+        <PhraseComponent
+          index={index}
+          dialogId={id}
+          langs={phrase.langs}
+          selectedLang={selectedLang}
+          langOpts={langs}
+          dragStart={this.handleDragStart}
+          dragEnd={this.handleDragEnd}
+          show={dragIndex !== index}
+        />
+      </PhraseDropComponent>
+    ));
+
+    const titleArea = edit ?
       (<input value={title} onChange={this.handleTitleChange} onKeyPress={this.onEnterPress}/>)
       : (<span role='presentation' onKeyPress={() => {}} onClick={this.handleEditToggle}>{name}</span>);
 

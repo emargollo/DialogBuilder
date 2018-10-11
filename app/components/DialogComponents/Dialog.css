@@ -31,11 +31,18 @@
 
 .Phrase {
   width: auto;
-  background-color: slateblue;
+  background-color: #391C20;
   max-width: 400px;
   padding: 20px;
   border-radius: 20px;
   margin: 10px;
-    min-width: 250px;
-  border: 3px solid darkslateblue;
+  min-width: 250px;
+  border: 3px solid #D89936;
+  z-index: 2;
+}
+
+.dropArea {
+  z-index: 1;
+  background-color: #000;
+  min-height: 100px;
 }

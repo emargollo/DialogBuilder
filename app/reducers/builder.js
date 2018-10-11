@@ -9,7 +9,8 @@ import {
   DIALOG_DELETED,
   DIALOG_NAME_EDITED,
   DATA_CLEARED,
-  TEXT_DELETED
+  TEXT_DELETED,
+  PHRASES_REORDERED
 } from '../actions/builder'
 
 const defaultState = {
@@ -24,31 +25,31 @@ const defaultState = {
           message:`Cícera, I'm glad you've stopped by! I need your help.`,
         }, {
           id: 'pt',
-          message:`Menina Cícera! Que bom que você passou por aqui. Eu preciso de ajuda.`,
+          message:`Menina Cícera! Que bom que você passou por aqui. Eu preciso de ajuda. 1`,
         }],
       }, {
         id: uuid(),
         langs: [{
           id: 'pt',
-          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro?',
+          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro? 2',
         }]
       }, {
         id: uuid(),
         langs: [{
           id: 'pt',
-          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro?',
+          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro? 3',
         }]
       }, {
         id: uuid(),
         langs: [{
           id: 'pt',
-          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro?',
+          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro? 4',
         }]
       }, {
         id: uuid(),
         langs: [{
           id: 'pt',
-          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro?',
+          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro? 5',
         }]
       }],
     }, {
@@ -162,6 +163,15 @@ const updateText = (state, action) => {
 
 const builder = (state = defaultState, action: Action) => {
   switch (action.type) {
+    case PHRASES_REORDERED:
+      return {
+        ...state,
+        data: {
+          dialogs: [
+            ...state.data.dialogs.map(dialog => (dialog.id === action.id) ? {...dialog, phrases: [...action.phrases]} : dialog)
+          ]
+        }
+      }
     case DATA_CLEARED:
       return {
         ...state,

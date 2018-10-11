@@ -18,7 +18,7 @@ const checkForColorTags = (message: string) => {
 }
 
 const messageToSpam = (msg, index) => {
-  let color = '#fffff';
+  let color = '#D89936';
   let message = msg;
   if(msg.includes('<color')) {
     color = msg.substr(msg.indexOf('=')+1, 7);

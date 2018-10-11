@@ -16,6 +16,15 @@ export const FILE_OPENED = 'FILE_OPENED';
 export const DIALOG_DELETED = 'DIALOG_DELETED';
 export const DIALOG_NAME_EDITED = 'DIALOG_NAME_EDITED';
 export const DATA_CLEARED = 'DATA_CLEARED';
+export const PHRASES_REORDERED = 'PHRASES_REORDERED';
+
+export function reorderPhrases(dId, phrases) {
+  return {
+    type: PHRASES_REORDERED,
+    id: dId,
+    phrases
+  }
+}
 
 export function deleteDialog(dId) {
   return {

@@ -9,9 +9,11 @@ type Props = {
   selectedLang: string,
   langs: array,
   index: number,
-  dialogName: string,
+  dialogId: string,
   editText: () => {},
-  deleteText: () => {}
+  deleteText: () => {},
+  dragStart: () => {},
+  dragEnd: () => {}
 };
 
 class PhraseComponent extends Component<Props> {
@@ -43,18 +45,18 @@ class PhraseComponent extends Component<Props> {
   }
 
   handleDeletePhrase = () => {
-    const { index, dialogName, deleteText} = this.props;
-    deleteText(index, dialogName);
+    const { index, dialogId, deleteText} = this.props;
+    deleteText(index, dialogId);
   }
 
   handleLangEdit = (event) => {
-    const { selectedLang, index, dialogName, editText} = this.props;
+    const { selectedLang, index, dialogId, editText} = this.props;
     const message = event.target.value;
     const lang = {
       id: selectedLang,
       message
     };
-    editText(lang, index, dialogName);
+    editText(lang, index, dialogId);
   }
 
   onEnterPress = (e) => {
@@ -65,14 +67,19 @@ class PhraseComponent extends Component<Props> {
   }
 
   render() {
-    const {selectedLang, langs} = this.props;
+    const {selectedLang, langs, dragStart, dragEnd, index} = this.props;
     const {edit} = this.state;
     const currentLang = langs.filter(lang =>
       lang.id === selectedLang)[0]
       || {id: selectedLang, message: ''};
 
     return (
-      <div className={styles.Phrase}>
+      <div
+        draggable
+        className={styles.Phrase}
+        onDragStart={(e) => dragStart(e, index)}
+        onDragEnd={dragEnd}
+      >
         <div>
           <button
             onClick={this.handleEditToggle}
