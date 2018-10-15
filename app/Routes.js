@@ -10,7 +10,7 @@ import BuilderPage from './containers/BuilderPage';
 export default () => (
   <App>
     <Switch>
-      <Route path={routes.BUILDER} component={BuilderPage} />
+      <Route path={routes.HOME} component={BuilderPage} />
       <Route path={routes.COUNTER} component={CounterPage} />
       <Route path={routes.HOME} component={HomePage} />
     </Switch>

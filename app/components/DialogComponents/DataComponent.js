@@ -6,7 +6,7 @@ import DialogComponent from './DialogComponent';
 import styles from './Dialog.css';
 
 type Props = {
-  langs: any,
+  langs: Array,
   selectedLang: string,
   dialogs: Array,
   addDialog: () => {}
@@ -34,7 +34,7 @@ class DataComponent extends Component<Props> {
     return (
       <div className={styles.Data}>
         {dialogObjects}
-        <button type='button' onClick={this.handleAddDialog}>Add Dialog</button>
+        <div role='presentation' className={styles.addDialog} onClick={this.handleAddDialog}>+Novo Diálogo</div>
       </div>
     );
   }

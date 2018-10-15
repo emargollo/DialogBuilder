@@ -1,11 +1,15 @@
 import { bindActionCreators } from 'redux';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import 'array.prototype.move';
 import * as BuilderActions from '../../actions/builder';
 import PhraseComponent from './PhraseComponent';
 import PhraseDropComponent from './PhraseDropComponent';
 import styles from './Dialog.css';
+import HOC from '../../hoc/HOC';
+import Backdrop from '../AuxComponents/BackdropComponent';
 
 type Props = {
   selectedLang: string,
@@ -30,6 +34,11 @@ class DialogComponent extends Component<Props> {
   componentDidMount = () => {
     const {name, phrases} = this.props;
     this.setState({title: name, phrases});
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const {phrases} = nextProps;
+    this.setState({phrases});
   }
 
   handleAddPhrase = () => {
@@ -66,7 +75,8 @@ class DialogComponent extends Component<Props> {
   handleDragOverPhrase = (event, index) => {
     event.preventDefault();
     const {dragIndex, phrases} = this.state;
-    if(dragIndex !== index) {
+    if (dragIndex === null) return;
+    if (dragIndex !== index) {
       console.log(`Dragging ${dragIndex} over ${index}, horray`);
       phrases.move(dragIndex, index);
       this.setState({
@@ -112,20 +122,31 @@ class DialogComponent extends Component<Props> {
     ));
 
     const titleArea = edit ?
-      (<input value={title} onChange={this.handleTitleChange} onKeyPress={this.onEnterPress}/>)
-      : (<span role='presentation' onKeyPress={() => {}} onClick={this.handleEditToggle}>{name}</span>);
+      (
+        <HOC>
+          <Backdrop click={this.handleEditToggle} />
+          <input autoFocus style={{position:'relative', zIndex:'2', cursor: 'text'}} value={title} onChange={this.handleTitleChange} onKeyPress={this.onEnterPress}/> {/* eslint-disable-line*/}
+        </HOC>
+      )
+      : (<span className={styles.dialogTitle} role='presentation' onKeyPress={() => {}} onClick={this.handleEditToggle}>{name}</span>);
+
+    const dialogHeader = (
+      <div style={{minWidth: '330px'}}>
+        {titleArea}
+        <IconButton className={styles.deleteBtn} onClick={this.handleDeleteDialog} aria-label="Delete">
+          <DeleteIcon />
+        </IconButton>
+      </div>
+    );
 
     return (
       <div className={styles.Dialog}>
-        {titleArea}
-        <button type='button' onClick={this.handleAddPhrase}>
-          AddPhrase
-        </button>
-        <button type='button' onClick={this.handleDeleteDialog}>
-          DeleteDialog
-        </button>
+        {dialogHeader}
         <div className={styles.PhrasesWrapper}>
           {renderPhrases}
+        </div>
+        <div className={styles.addPhrase} role='presentation' onClick={this.handleAddPhrase}>
+          <span>+Nova Frase</span>
         </div>
       </div>
     );

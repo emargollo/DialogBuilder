@@ -15,54 +15,7 @@ import {
 
 const defaultState = {
   data: {
-    dialogs: [{
-      id: uuid(),
-      name: 'begin_q11',
-      phrases: [{
-        id: uuid(),
-        langs: [{
-          id: 'en',
-          message:`Cícera, I'm glad you've stopped by! I need your help.`,
-        }, {
-          id: 'pt',
-          message:`Menina Cícera! Que bom que você passou por aqui. Eu preciso de ajuda. 1`,
-        }],
-      }, {
-        id: uuid(),
-        langs: [{
-          id: 'pt',
-          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro? 2',
-        }]
-      }, {
-        id: uuid(),
-        langs: [{
-          id: 'pt',
-          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro? 3',
-        }]
-      }, {
-        id: uuid(),
-        langs: [{
-          id: 'pt',
-          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro? 4',
-        }]
-      }, {
-        id: uuid(),
-        langs: [{
-          id: 'pt',
-          message: 'Qual o problema, Almira? Está tudo bem com o pequeno Miro? 5',
-        }]
-      }],
-    }, {
-      id: uuid(),
-      name: 'middle_q11',
-      phrases: [{
-        id: uuid(),
-        langs: [{
-          id: 'pt',
-          message: '<color=#FFD08A>Mandacaru</color> não falta por aqui. Esteja com o facão afiado.',
-        }]
-      }]
-    }],
+    dialogs: [],
   },
   langs: ['en', 'pt'],
   selectedLang: 'pt',

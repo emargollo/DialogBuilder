@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './Dialog.css';
 
 type Props = {
   message: string,
@@ -23,7 +24,7 @@ const messageToSpam = (msg, index) => {
   if(msg.includes('<color')) {
     color = msg.substr(msg.indexOf('=')+1, 7);
     message = msg.substr(msg.indexOf('>')+1);
-    message = message.substring(0, message.indexOf('<'));
+    message = message.substring(0, message.indexOf('</color'));
   }
   return (
     <span key={index} style={{color}}>{message}</span>
@@ -32,13 +33,15 @@ const messageToSpam = (msg, index) => {
 
 const displayTextComponent = (props: Props) => {
   const {message, toggleEdit} = props;
+  let spams = (<span style={{color: '#777'}}>Insira a Frase aqui</span>);
 
-  const messageParts = checkForColorTags(message);
-
-  const spams = messageParts.map((msg, index) => messageToSpam(msg, index));
+  if (message !== '') {
+    const messageParts = checkForColorTags(message);
+    spams = messageParts.map((msg, index) => messageToSpam(msg, index));
+  }
 
   return (
-    <div role='presentation' onKeyPress={() => {}} onClick={toggleEdit}>{spams}</div>
+    <div className={styles.displayText} role='presentation' onClick={toggleEdit}>{spams}</div>
   )
 }
 

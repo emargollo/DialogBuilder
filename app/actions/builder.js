@@ -47,12 +47,12 @@ export function updateDialogName(name, id) {
   }
 }
 
-export function addDialog(selectedLang) {
+export function addDialog(selectedLang) { // eslint-disable-line no-unused-vars
   return {
     type: DIALOG_ADDED,
     payload: {
       id: uuid(),
-      name:'New Dialog',
+      name:'Novo Diálogo',
       phrases: [
         // {
         //   id: uuid(),

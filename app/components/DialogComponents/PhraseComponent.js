@@ -1,6 +1,8 @@
 import { bindActionCreators } from 'redux';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import LangComponent from './LangComponent';
 import styles from './Dialog.css';
 import * as BuilderActions from '../../actions/builder';
@@ -69,6 +71,7 @@ class PhraseComponent extends Component<Props> {
   render() {
     const {selectedLang, langs, dragStart, dragEnd, index} = this.props;
     const {edit} = this.state;
+    console.log(langs[0].message);
     const currentLang = langs.filter(lang =>
       lang.id === selectedLang)[0]
       || {id: selectedLang, message: ''};
@@ -81,18 +84,10 @@ class PhraseComponent extends Component<Props> {
         onDragEnd={dragEnd}
       >
         <div>
-          <button
-            onClick={this.handleEditToggle}
-            type='button'
-          >
-            Edit
-          </button>
-          <button
-            onClick={this.handleDeletePhrase}
-            type='button'
-          >
-            Delete
-          </button>
+          <span className={styles.idText}>ID:{index+1}</span>
+          <IconButton className={styles.deleteBtn} onClick={this.handleDeletePhrase} aria-label="Delete">
+            <DeleteIcon />
+          </IconButton>
         </div>
         <LangComponent
           message={currentLang.message}

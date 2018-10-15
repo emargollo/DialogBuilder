@@ -22,6 +22,7 @@ const langComponent = (props: Props) => {
     return (
       <EditTextComponent
         onEdit={onEdit}
+        toggleEdit={toggleEdit}
         onEnter={onEnter}
         message={message}
       />

@@ -96,19 +96,19 @@ class NavbarComponent extends Component<Props> {
           type='button'
           onClick={this.handleNewFile}
         >
-          New File
+          Novo
         </button>
         <button
           type='button'
           onClick={this.handleOpenFile}
         >
-          Open File
+          Abrir
         </button>
         <button
           type='button'
           onClick={this.handleExportFile}
         >
-          Export File
+          Exportar
         </button>
       </div>
     )
