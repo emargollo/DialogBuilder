@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
 import fs from 'fs';
+import convert from 'xml-js'
 import xml2js from 'xml2js';
 import styles from './Dialog.css';
 import * as BuilderActions from '../../actions/builder';
@@ -31,6 +32,79 @@ class NavbarComponent extends Component<Props> {
     });
   }
 
+  dialogsToXMLJson = (dialogs) => {
+    console.log(dialogs);
+    const dialogues = dialogs.map((d) => {
+      const phrases = d.phrases.map((p, i) => {
+        const pt = p.langs.filter(l => l.id === 'pt')[0];
+        const en = p.langs.filter(l => l.id === 'en')[0];
+        return {
+          type: 'element',
+          name: 'phrase',
+          attributes: {
+            id: `${(i+1)}`
+          },
+          elements: [
+            {
+              type: 'element',
+              name: 'lang',
+              attributes: {
+                id: 'pt'
+              },
+              elements: [
+                {
+                  type: 'cdata',
+                  cdata: pt.message
+                }
+              ]
+            },
+            {
+              type: 'element',
+              name: 'lang',
+              attributes: {
+                id: 'en'
+              },
+              elements: [
+                {
+                  type: 'cdata',
+                  cdata: en.message
+                }
+              ]
+            }
+          ]
+        }
+      });
+      return {
+        type: 'element',
+        name: 'dialogue',
+        attributes: {
+          name: d.name
+        },
+        elements: [
+          ...phrases
+        ]
+      }
+    })
+    const data = {
+      declaration: {
+        attributes: {
+          version: '1.0',
+          encoding: 'UTF-8',
+          standalone: 'yes'
+        }
+      },
+      elements:[
+        {
+        type: 'element',
+        name: 'data',
+        elements: [
+          ...dialogues
+        ]
+      }]
+    };
+    return data;
+  }
+
   handleExportFile = () => {
     const {builder: { data: { dialogs } }} = this.props;
     const dialogue = dialogs.map((dialog) => {
@@ -40,7 +114,7 @@ class NavbarComponent extends Component<Props> {
             id: lang.id
           },
           _: lang.message
-        }))
+        }));
 
         return {
           $: {
@@ -67,13 +141,20 @@ class NavbarComponent extends Component<Props> {
     const builder = new xml2js.Builder({cdata:true});
     const xml = builder.buildObject(data);
 
+    const options = {
+      spaces: 2,
+      fullTagEmptyElement: true,
+
+    }
+    const xml2 = convert.json2xml(this.dialogsToXMLJson(dialogs), options);
+
     remote.dialog.showSaveDialog({
       filters : [{
         name: 'XML File (*.xml)',
         extensions: ['xml']
       }]
     }, (file) => {
-      fs.writeFile(file, xml, (err) => {
+      fs.writeFile(file, xml2, (err) => {
         if (err) throw err;
       });
     });
